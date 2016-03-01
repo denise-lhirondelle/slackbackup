@@ -1,0 +1,142 @@
+#!/bin/bash
+
+backup_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+this_backup="$backup_root/$(hostname)"
+backup_directory=$this_backup/backups
+directory_list=$this_backup/directory_list.txt
+exclude_list=$this_backup/exclude_list.txt
+
+function usage {
+    echo $"First-time setup:"
+    echo $"$0 setup"
+    echo $"To add a directory:"
+    echo $"$0 add directory_name"
+    exit 1
+}
+
+function first_time_setup {
+    if [ -d $backup_directory ]; then
+        echo "$backup_directory already exists"
+    else
+        mkdir -p $backup_directory
+    fi
+
+    if [ -f $directory_list ]; then
+        echo "$directory_list already exists"
+    else
+        touch $directory_list
+    fi
+
+    if [ -f $exclude_list ]; then
+        echo "$exclude_list already exists"
+    else
+        touch $exclude_list 
+    fi
+}
+
+function check_if_set_up {
+    if [ ! -d $backup_directory ] || [ ! -f $directory_list ]; then
+        echo "It seems like you haven't set up the backup directory yet."
+        echo "To do so, run this:"
+        echo "$0 setup"
+        exit 0
+    fi
+}
+
+function add_directory {
+    if [ -z $1 ]; then
+        echo "Error: directory not specified"
+        return 1
+    fi
+
+    local selected_dir=$1
+
+    if [ ! -d $selected_dir ]; then 
+        echo "$selected_dir is not a valid directory"
+        return 1
+    fi
+
+    local dir_path=$(cd $selected_dir && pwd)
+
+    if grep -q "$dir_path" "$directory_list"; then
+        echo "$dir_path is already in the directory list."
+    else
+        printf "%s\n" "$dir_path" >> $directory_list
+        echo "Added $dir_path."
+    fi
+    return 0
+}
+
+function exclude_directory {
+    if [ -z $1 ]; then
+        echo "Error: directory not specified."
+        return 1
+    fi
+
+    local selected_dir=$1
+
+    if [ ! -d $selected_dir ]; then 
+        echo "$selected_dir is not a valid directory."
+        return 1
+    fi
+
+    local dir_path=$(cd $selected_dir && pwd)
+
+    if grep -q "$dir_path" "$exclude_list"; then
+        echo "$dir_path is already in exclude list."
+    else
+        printf "%s\n" "$dir_path" >> $exclude_list
+        echo "Added $dir_path to exclude list."
+    fi
+    return 0
+}
+
+function get_previous_backup {
+    cd $backup_directory
+    return $(ls -1 | tail -n 1)
+}
+
+function current_backup_path {
+    local date=`date "+%Y-%m-%d_%H_%M_%S"`
+    return $backup_directory/$(hostname)_$date
+}
+
+function backup_a_dir {
+    if [ -z $1 ]; then
+        echo "Error: source not specified"
+        return 1
+    fi
+
+    local previous_backup=$(get_previous_backup)
+    local current_backup=$(current_backup_path)
+    local backup_source=$1
+
+    #rsync -aHxvz \
+        #--progress \
+        #--numeric-ids \
+        #--delete \
+        #--delete-excluded \
+        #--exclude-from=/dir/to/exclude \
+        #--link-dest=$previous_backup \
+}
+
+case "$1" in
+    setup)
+        first_time_setup 
+        ;;
+    add)
+        check_if_set_up 
+        add_directory $2
+        ;;
+    exclude)
+        check_if_set_up 
+        exclude_directory $2
+        ;;
+    backup)
+        check_if_set_up 
+        ;;
+    restore)
+        ;;
+    *)
+        usage
+esac
