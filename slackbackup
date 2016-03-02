@@ -1,6 +1,13 @@
 #!/bin/bash
 
-backup_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+link_source="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+while [ -h "$link_source" ]; do
+    real_dir="$(cd -P "$(dirname "$link_source")" && pwd)"
+    link_source="$(readlink "$link_source")"
+    [[ $link_source != /* ]] && link_source="$real_dir/$link_source"
+done
+backup_root="$(cd -P "$(dirname "$link_source")" && pwd)"
+
 this_backup="$backup_root/machines/$(hostname)"
 backup_directory=$this_backup/backups
 directory_list=$this_backup/directory_list.txt
