@@ -1,7 +1,7 @@
 #!/bin/bash
 
 backup_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-this_backup="$backup_root/$(hostname)"
+this_backup="$backup_root/machines/$(hostname)"
 backup_directory=$this_backup/backups
 directory_list=$this_backup/directory_list.txt
 exclude_list=$this_backup/exclude_list.txt
@@ -17,6 +17,8 @@ function usage {
 }
 
 function first_time_setup {
+    printf "%s\n" "$(hostname)" >> $backup_root/.gitignore
+
     if [ -d $backup_directory ]; then
         echo "$backup_directory already exists"
     else
@@ -104,7 +106,7 @@ function get_source_dirs {
     do
         source_list="$source_list $line"
     done < "$directory_list"
-    return "$source_list"
+    echo "$source_list"
 }
 
 function backup {
@@ -123,12 +125,11 @@ function backup {
 
     rsync -aHxvz \
         --progress \
-        --dry-run \
         --numeric-ids \
         --delete \
         --delete-excluded \
         --exclude-from=$exclude_list \
-        --link-dest=$previous_backup \
+        --link-dest=$backup_directory/$(hostname)_current \
         $backup_source \
         $current_incomplete
 
@@ -151,6 +152,7 @@ case "$1" in
         ;;
     backup)
         check_if_set_up 
+        backup
         ;;
     restore)
         ;;
