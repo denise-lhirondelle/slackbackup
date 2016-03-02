@@ -134,6 +134,7 @@ function backup {
     rsync -aHxvz \
         --progress \
         --numeric-ids \
+        --relative \
         --delete \
         --delete-excluded \
         --exclude-from=$exclude_list \
