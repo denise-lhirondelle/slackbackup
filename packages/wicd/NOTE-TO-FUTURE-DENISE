@@ -1,0 +1,5 @@
+If you get a dbus error: 
+1. Uninstall wicd.
+2. See what wicd directories are left over.
+3. Put that list in old_directories in slackbuild script.
+4. Run the script.
