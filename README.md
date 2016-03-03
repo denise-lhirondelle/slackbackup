@@ -1,7 +1,27 @@
+slackbackup
+===========
 
-Clone this repo on your external drive and run the script.
+To set up backup:
+-----------------
 
-packages directory - these must be installed before etc and home can be copied
+1. Clone this repo onto your external drive.
 
-directory-list.txt - list of directories to back up
+2. Run slackbackup setup.
 
+3. Run whatever is needed here:
+>slackbackup add /path/to/directory
+>slackbackup exclude /path/to/directory
+
+To back up files:
+=================
+
+1. Mount drive
+
+2. Run slackbackup backup
+
+To do a full restore:
+=====================
+
+1. Install needed packages from packages directory.
+
+2. Copy backup from machines
