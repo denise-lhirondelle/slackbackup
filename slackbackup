@@ -138,6 +138,7 @@ function backup {
         --delete \
         --delete-excluded \
         --exclude-from=$exclude_list \
+        --log-file=$this_backup/rsync_log.txt \
         --link-dest=$backup_directory/$(hostname)_current \
         $backup_source \
         $current_incomplete
