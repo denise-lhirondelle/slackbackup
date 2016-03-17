@@ -10,6 +10,7 @@ To set up backup:
 
 3. Run whatever is needed here:
 >slackbackup add /path/to/directory
+
 >slackbackup exclude /path/to/directory
 
 To back up files:
