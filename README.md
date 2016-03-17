@@ -1,5 +1,5 @@
-slackbackup
-===========
+Slackbackup - a backup script for Slackware
+===========================================
 
 To set up backup:
 -----------------
@@ -13,14 +13,14 @@ To set up backup:
 >slackbackup exclude /path/to/directory
 
 To back up files:
-=================
+-----------------
 
 1. Mount drive
 
 2. Run slackbackup backup
 
 To do a full restore:
-=====================
+---------------------
 
 1. Install needed packages from packages directory.
 
