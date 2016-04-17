@@ -3,7 +3,7 @@ Slackbackup - a backup script for Slackware
 
 Warning
 -------
-Do not use this on an NTFS partition.
+This has only been tested on backing up an ext4 partition to an ext3 external drive.
 
 To set up backup:
 -----------------
