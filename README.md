@@ -1,6 +1,10 @@
 Slackbackup - a backup script for Slackware
 ===========================================
 
+Warning
+-------
+Do not use this on an NTFS partition.
+
 To set up backup:
 -----------------
 
